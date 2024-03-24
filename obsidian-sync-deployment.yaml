@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obsidian-sync
+  labels:
+    app: obsidian-sync
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obsidian-sync
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: obsidian-sync
+    spec:
+      containers:
+      - name: obsidian-sync
+        imagePullPolicy: "IfNotPresent"
+        image: alterzz/obsidian-sync-share-server:latest
+        ports:
+        - name: http
+          containerPort: 8789
+          protocol: TCP
+        - name: "JAVA_OPTS"
+          value: "-Xmx512m"
+        volumeMounts:
+          - name: k8s-pv02
+            mountPath: /app/user_store
+            subPath: obsidian-sync/user_store
+      volumes:
+      - name: k8s-pv02
+        persistentVolumeClaim:
+          claimName: synology-k8s-pv02
