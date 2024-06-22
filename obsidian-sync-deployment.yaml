@@ -2,29 +2,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: obsidian-sync
+  name: obsidian-sync-share
   labels:
-    app: obsidian-sync
+    app: obsidian-sync-share
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: obsidian-sync
+      app: obsidian-sync-share
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: obsidian-sync
+        app: obsidian-sync-share
     spec:
       containers:
-      - name: obsidian-sync
+      - name: obsidian-sync-share
         imagePullPolicy: "IfNotPresent"
         image: alterzz/obsidian-sync-share-server:latest
         ports:
         - name: http
           containerPort: 8789
           protocol: TCP
+        env:
         - name: "JAVA_OPTS"
           value: "-Xmx512m"
         volumeMounts:
